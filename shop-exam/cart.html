@@ -1,0 +1,101 @@
+<!--
+Сайт зроблено студентом Каракуцем Даниїлом Олександровичем
+Група: ФІТ 4-1
+-->
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Кошик — EcoHome</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <h1>EcoHome — Кошик</h1>
+  <nav>
+    <a href="index.html">Каталог</a> |
+    <a href="cart.html">Кошик</a> |
+    <a href="about.html">Про нас</a> |
+    <a href="contacts.html">Контакти</a>
+    <span data-cart style="margin-left:15px; font-weight:bold;">
+      Кошик: 0 шт / 0.00 €
+    </span>
+  </nav>
+</header>
+
+<main>
+  <h2>Товари у кошику</h2>
+
+  <table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Товар</th>
+        <th>Ціна</th>
+        <th>Кількість</th>
+        <th>Сума</th>
+      </tr>
+    </thead>
+    <tbody id="cart-items">
+      <!-- JS вставит товары -->
+    </tbody>
+  </table>
+
+  <h3 id="cart-total">Разом: 0 €</h3>
+
+  <button onclick="clearCart()">Очистити кошик</button>
+</main>
+
+<script src="js/app.js"></script>
+
+<script>
+function renderCartPage() {
+  const cart = getCart();
+  const tbody = document.getElementById("cart-items");
+  const totalEl = document.getElementById("cart-total");
+
+  tbody.innerHTML = "";
+
+  let total = 0;
+
+  for (let id in cart) {
+    const product = PRODUCTS.find(p => p.id === id);
+    if (!product) continue;
+
+    const qty = cart[id];
+    const sum = product.price * qty;
+    total += sum;
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${product.name}</td>
+      <td>${product.price.toFixed(2)} €</td>
+      <td>${qty}</td>
+      <td>${sum.toFixed(2)} €</td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  totalEl.textContent = "Разом: " + total.toFixed(2) + " €";
+}
+
+function clearCart() {
+  localStorage.removeItem("exam_cart_fit41");
+  renderCartPage();
+  updateCartBadge();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderCartPage();
+  updateCartBadge();
+});
+</script>
+<footer style="margin-top:40px; padding-top:10px; border-top:1px solid #ccc;">
+  <p>
+    Виконав: <b>Каракуц Даніїл Олександрович</b><br>
+    Група: <b>ФІТ 4-1</b>
+  </p>
+</footer>
+
+</body>
+</html>
